@@ -42,6 +42,23 @@ export default function Detail(props) {
         })
     }
 
+    const playerClicked = async (player) => {
+        token = await AsyncStorage.getItem('icob-token');
+        fetch(`https://icob-app.herokuapp.com/mainapp/matches/${item.id}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Token ${token}`
+            }
+        })
+        .then(res => res.json()) 
+        .then(jsonRes => {
+            setPlayers(jsonRes.players)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+
     useEffect(() => {
         // console.log("Detail"+token)
         getData(match)
@@ -49,10 +66,11 @@ export default function Detail(props) {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.centeredText}>Click on one of the players to vote MOTM:</Text>
             <FlatList  
                 data={players}
                 renderItem={({item}) => (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => playerClicked(item)}>
                         <View style={styles.item}>
                             <Text style={styles.itemText}>{item.name + " " + item.surname}</Text>
                             <View style={styles.lineStyle} />
@@ -68,15 +86,33 @@ export default function Detail(props) {
 
 Detail.navigationOptions = screenProps => ({
     title: screenProps.navigation.getParam('opposition'),
-    headerRight: () => <Button 
-                            title="Availability"
-                            onPress={() => {
-                                screenProps.navigation.navigate("Availability", 
-                                {
-                                    match_id: screenProps.navigation.getParam('match').id,
-                                })
-                            }}    
-                        />
+    headerRight: () => {
+        if(screenProps.navigation.getParam('isFutureMatch')){
+            return (
+                <Button 
+                    title="Availability"
+                    onPress={() => {
+                        screenProps.navigation.navigate("Availability", 
+                        {
+                            match_id: screenProps.navigation.getParam('match').id,
+                        })
+                    }}    
+                />
+            )
+        } else {
+            return (
+                <Button 
+                    title="Check MOTM Votes"
+                    onPress={() => {
+                        screenProps.navigation.navigate("Availability", 
+                        {
+                            match_id: screenProps.navigation.getParam('match').id,
+                        })
+                    }}    
+                />
+            )
+        }
+    }
 })
 
 const styles = StyleSheet.create({
@@ -98,5 +134,10 @@ const styles = StyleSheet.create({
     lineStyle: {
         borderBottomColor: '#fff',
         borderBottomWidth: 1,
+    },
+    centeredText:{
+        color: '#fff',
+        fontSize: 24,
+        textAlign: 'center',
     }
   });

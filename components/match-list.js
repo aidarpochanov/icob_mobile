@@ -56,23 +56,48 @@ export default function MatchList(props) {
         getData();
     }, [])
 
-    const matchClicked = (item) => {
-        props.navigation.navigate('Detail', {match: item, opposition: item.opposition})
+    const matchClicked = (item, isFutureMatch) => {
+        props.navigation.navigate('Detail', {match: item, opposition: item.opposition, isFutureMatch: isFutureMatch})
     }
 
     return (
-        
         <View style={styles.container}>
+        <Text style={styles.centeredText}>Past matches:</Text>
         <FlatList  
             data={matches}
-            renderItem={({item}) => (
-                <TouchableOpacity onPress={() => matchClicked(item)}>
-                    <View style={styles.item}>
-                        <Text adjustsFontSizeToFit={true} style={styles.itemText}>{`${item.opposition} ${item.date}`}</Text>
-                        <View style={styles.lineStyle} />
-                    </View>
-                </TouchableOpacity>
-            )}
+            renderItem={({item}) => 
+                {
+                    if(Date.parse(item.date) < Date.now()){
+                        return (
+                            <TouchableOpacity onPress={() => matchClicked(item, false)}>
+                                <View style={styles.item}>
+                                    <Text adjustsFontSizeToFit={true} style={styles.itemText}>{`${item.opposition} ${item.date}`}</Text>
+                                    <View style={styles.lineStyle} />
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    }
+                }
+            }
+            keyExtractor = {(item, index) => item.id.toString()}
+        />
+        <Text style={styles.centeredText}>Future matches:</Text>
+        <FlatList  
+            data={matches}
+            renderItem={({item}) => 
+                {
+                    if(Date.parse(item.date) > Date.now()){
+                        return (
+                            <TouchableOpacity onPress={() => matchClicked(item, true)}>
+                                <View style={styles.item}>
+                                    <Text adjustsFontSizeToFit={true} style={styles.itemText}>{`${item.opposition} ${item.date}`}</Text>
+                                    <View style={styles.lineStyle} />
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    }
+                }
+            }
             keyExtractor = {(item, index) => item.id.toString()}
         />
         <FetchingIndicator isFetching={loading} message="Fetching matches" backdropColor='rgba(0, 0, 0, 0.50)' color='blue'/>
@@ -103,5 +128,10 @@ const styles = StyleSheet.create({
   lineStyle:{
     borderBottomColor: '#fff',
     borderBottomWidth: 1,
+  },
+  centeredText:{
+    color: '#fff',
+    fontSize: 24,
+    textAlign: 'center',
   }
 });
