@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, AsyncStorage } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FetchingIndicator from 'react-native-fetching-indicator'
-
+import MatchItem from './match-item'
 
 export default function MatchList(props) {
 
@@ -15,9 +15,7 @@ export default function MatchList(props) {
         token = await AsyncStorage.getItem('icob-token');
         // console.log("in getdata"+token)
         if (token) {
-            
             getMatches()
-            
         } else {
             props.navigation.navigate('Auth')
         }
@@ -56,10 +54,6 @@ export default function MatchList(props) {
         getData();
     }, [])
 
-    const matchClicked = (item, isFutureMatch) => {
-        props.navigation.navigate('Detail', {match: item, opposition: item.opposition, isFutureMatch: isFutureMatch})
-    }
-
     return (
         <View style={styles.container}>
         <Text style={styles.centeredText}>Past matches:</Text>
@@ -69,12 +63,7 @@ export default function MatchList(props) {
                 {
                     if(Date.parse(item.date) < Date.now()){
                         return (
-                            <TouchableOpacity onPress={() => matchClicked(item, false)}>
-                                <View style={styles.item}>
-                                    <Text adjustsFontSizeToFit={true} style={styles.itemText}>{`${item.opposition} ${item.date}`}</Text>
-                                    <View style={styles.lineStyle} />
-                                </View>
-                            </TouchableOpacity>
+                            <MatchItem match={item} isFutureMatch={false} navigation={props.navigation}/>
                         )
                     }
                 }
@@ -88,12 +77,7 @@ export default function MatchList(props) {
                 {
                     if(Date.parse(item.date) > Date.now()){
                         return (
-                            <TouchableOpacity onPress={() => matchClicked(item, true)}>
-                                <View style={styles.item}>
-                                    <Text adjustsFontSizeToFit={true} style={styles.itemText}>{`${item.opposition} ${item.date}`}</Text>
-                                    <View style={styles.lineStyle} />
-                                </View>
-                            </TouchableOpacity>
+                            <MatchItem match={item} isFutureMatch={true} navigation={props.navigation}/>
                         )
                     }
                 }

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, Button, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Button, AsyncStorage, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FetchingIndicator from 'react-native-fetching-indicator';
 
@@ -44,15 +44,19 @@ export default function Detail(props) {
 
     const playerClicked = async (player) => {
         token = await AsyncStorage.getItem('icob-token');
-        fetch(`https://icob-app.herokuapp.com/mainapp/matches/${item.id}`, {
+        fetch(`https://icob-app.herokuapp.com/mainapp/matches/${match.id}/vote/`, {
             method: 'POST',
             headers: {
-                'Authorization': `Token ${token}`
-            }
+                'Authorization': `Token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'player_voted_for': player.id
+            })
         })
         .then(res => res.json()) 
         .then(jsonRes => {
-            setPlayers(jsonRes.players)
+            Alert.alert(jsonRes.message)
         })
         .catch(error => {
             console.log(error)
@@ -103,12 +107,7 @@ Detail.navigationOptions = screenProps => ({
             return (
                 <Button 
                     title="Check MOTM Votes"
-                    onPress={() => {
-                        screenProps.navigation.navigate("Availability", 
-                        {
-                            match_id: screenProps.navigation.getParam('match').id,
-                        })
-                    }}    
+                    onPress={() => {}}    
                 />
             )
         }
