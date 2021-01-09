@@ -5,22 +5,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import FetchingIndicator from 'react-native-fetching-indicator';
 
 
-export default function Detail(props) {
+export default function MatchDetail(props) {
 
-    const match = props.navigation.getParam('match', null)
+    const match = props.route.params.match
     const [players, setPlayers] = useState([])
     const [loading, setLoading] = useState(false)
     let token = null
-
-    const getData = async (match) => {
-        token = await AsyncStorage.getItem('icob-token');
-        // console.log("in getdata"+token)
-        if (token) {
-            getPlayers(match)
-        } else {
-            props.navigation.navigate('Auth')
-        }
-    }
 
     const getPlayers = async (item) => {
         token = await AsyncStorage.getItem('icob-token');
@@ -65,7 +55,7 @@ export default function Detail(props) {
 
     useEffect(() => {
         // console.log("Detail"+token)
-        getData(match)
+        getPlayers(match)
     }, [])
 
     return (
@@ -87,32 +77,6 @@ export default function Detail(props) {
         </View>
     );
 }
-
-Detail.navigationOptions = screenProps => ({
-    title: screenProps.navigation.getParam('opposition'),
-    headerRight: () => {
-        if(screenProps.navigation.getParam('isFutureMatch')){
-            return (
-                <Button 
-                    title="Availability"
-                    onPress={() => {
-                        screenProps.navigation.navigate("Availability", 
-                        {
-                            match_id: screenProps.navigation.getParam('match').id,
-                        })
-                    }}    
-                />
-            )
-        } else {
-            return (
-                <Button 
-                    title="Check MOTM Votes"
-                    onPress={() => {}}    
-                />
-            )
-        }
-    }
-})
 
 const styles = StyleSheet.create({
     container: {

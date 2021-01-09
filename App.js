@@ -1,32 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import MatchList from './components/match-list';
-import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
-import Detail from './components/detail'
-import Auth from './components/auth';
-import Availability from './components/availability'
-
-const AppNavigator = createStackNavigator({
-  Auth: {screen: Auth},
-  MatchList: {screen: MatchList},
-  Detail: {screen: Detail},
-  Availability: {screen: Availability}
-});
+import {NavigationContainer} from '@react-navigation/native';
+import {createDrawerNavigator} from '@react-navigation/drawer'
+import matchListStack from './components/matches/match-stack'
+import playerListStack from './components/players/player-stack'
 
 
-const App = createAppContainer(AppNavigator);
+const Drawer = createDrawerNavigator();
+
+function AppDrawer(){
+
+  return(
+      <Drawer.Navigator
+        drawerContentOptions={{
+          activeTintColor: '#e91e63',
+          itemStyle: { marginVertical: 5 },
+        }}
+        >
+        <Drawer.Screen
+          name="Match List"
+          options={{ drawerLabel: 'Matches' }}
+          component={matchListStack}
+        />
+        <Drawer.Screen
+          name="Player List"
+          options={{ drawerLabel: 'Players' }}
+          component={playerListStack}
+        />
+      </Drawer.Navigator>
+  )
+}
 
 
-export default App;
+function Application() {
+ 
+  return (
+    <NavigationContainer>
+      <AppDrawer />
+    </NavigationContainer>
+  )
+}
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default Application;
+

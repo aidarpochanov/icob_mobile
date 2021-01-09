@@ -1,25 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, AsyncStorage } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import FetchingIndicator from 'react-native-fetching-indicator'
 import MatchItem from './match-item'
+
 
 export default function MatchList(props) {
 
     const [matches, setMatches] = useState([])
     const [loading, setLoading] = useState(false)
     let token = null
-
-    const getData = async () => {
-        token = await AsyncStorage.getItem('icob-token');
-        // console.log("in getdata"+token)
-        if (token) {
-            getMatches()
-        } else {
-            props.navigation.navigate('Auth')
-        }
-    }
 
     const getMatches = async () => {
         token = await AsyncStorage.getItem('icob-token');
@@ -45,13 +34,13 @@ export default function MatchList(props) {
         })
     }
 
-    // const saveToken = async (token) => {
-    //     await AsyncStorage.setItem('icob-token', "2d7f62b73ed767c255683169f4bba306ca7d6b0c")
-    // }
+    const saveToken = async (token) => {
+        await AsyncStorage.setItem('icob-token', "2d7f62b73ed767c255683169f4bba306ca7d6b0c")
+    }
 
     useEffect(() => {
-        // saveToken();
-        getData();
+        saveToken();
+        getMatches();
     }, [])
 
     return (
@@ -88,10 +77,6 @@ export default function MatchList(props) {
         </View>
     );
 }
-
-MatchList.navigationOptions = _ => ({
-    title: "Matches"
-})
 
 const styles = StyleSheet.create({
   container: {

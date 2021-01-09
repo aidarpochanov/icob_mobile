@@ -1,25 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, AsyncStorage } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import FetchingIndicator from 'react-native-fetching-indicator'
 
 
-export default function MatchItem(props) {
+export default function PlayerItem(props) {
 
-    const matchClicked = (item, isFutureMatch) => {
-        props.navigation.navigate('Detail', {match: item, opposition: item.opposition, isFutureMatch: isFutureMatch})
+    const playerClicked = (player) => {
+        // console.log(player)
+        props.navigation.navigate('Player Detail', {player: player})
     }
 
     return(
-        <TouchableOpacity onPress={() => matchClicked(props.match, props.isFutureMatch)}>
+        <TouchableOpacity onPress={() => playerClicked(props.player)}>
             <View style={styles.item}>
-                <Text adjustsFontSizeToFit={true} style={styles.itemText}>{`${props.match.opposition} ${props.match.date}`}</Text>
+                <Text adjustsFontSizeToFit={true} style={styles.itemText}>{`${props.player.name} ${props.player.surname}`}</Text>
                 <View style={styles.lineStyle} />
             </View>
         </TouchableOpacity>
     )
-
+    
 }
 
 const styles = StyleSheet.create({

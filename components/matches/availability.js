@@ -10,15 +10,6 @@ export default function Availability(props) {
     const [loading, setLoading] = useState(false)
     let token = null
 
-    const getData = async () => {
-        token = await AsyncStorage.getItem('icob-token');
-        if (token) {
-            getAvailability(props.navigation.getParam('match_id'))
-        } else {
-            props.navigation.navigate('Auth')
-        }
-    }
-
     const getAvailability = async (match_id) => {
         token = await AsyncStorage.getItem('icob-token');
         setLoading(true)
@@ -41,7 +32,7 @@ export default function Availability(props) {
     }
 
     useEffect(() => {
-        getData();
+        getAvailability(props.route.params.match_id);
     }, [])
     
 
@@ -68,12 +59,12 @@ export default function Availability(props) {
             .then(jsonRes => Alert.alert(jsonRes.response))
             .catch(error => console.log(error))
         }
-        props.navigation.navigate("MatchList")
+        props.navigation.navigate("Match List")
     }
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => toggleAvailability(props, props.navigation.getParam("match_id"))}>
+            <TouchableOpacity onPress={() => toggleAvailability(props, props.route.params.match_id)}>
             { loading
                 ? null 
                 : (available 

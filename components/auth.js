@@ -9,10 +9,6 @@ export default function Auth(props){
     const [password, setPassword] = useState("")
     const [regView, setRegView] = useState(false)
 
-    useEffect(() => {
-        getToken()
-    }, [])
-
     const auth = () => {
         if(!regView){
             fetch('https://icob-app.herokuapp.com/auth/', {
@@ -24,8 +20,8 @@ export default function Auth(props){
             })
             .then(res => res.json()) 
             .then(jsonRes => {
+                // console.log(jsonRes.token)
                 saveToken(jsonRes.token)
-                props.navigation.navigate("MatchList");
             })
             .catch(error => console.log(error))
         } else {
@@ -46,11 +42,8 @@ export default function Auth(props){
 
     const saveToken = async (token) => {
         await AsyncStorage.setItem('icob-token', token)
-    }
-
-    const getToken = async () => {
-        const t = await AsyncStorage.getItem('icob-token')
-        if(t) props.navigation.navigate("MatchList") 
+        console.log(props.loggedIn)
+        props.setLoggedIn(true)
     }
 
     const toggleView = () => {
@@ -89,6 +82,19 @@ export default function Auth(props){
         </View>
     )
 }
+
+function LogOut(props){
+    const logOut = () => {
+        AsyncStorage.removeItem('icob-token')
+        props.setLoggedIn(false)
+    }
+
+    useEffect(()=>logOut())
+
+    return (null)
+}
+
+export {LogOut}
 
 const styles = StyleSheet.create({
     container: {
