@@ -1,7 +1,7 @@
 // Custom Navigation Drawer / Sidebar with Image and Icon in Menu Options
 // https://aboutreact.com/custom-navigation-drawer-sidebar-with-image-and-icon-in-menu-options/
 
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   SafeAreaView,
   View,
@@ -10,47 +10,30 @@ import {
   Text,
   Linking,
 } from 'react-native';
-
+import AuthContext from './auth/context';
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
 
-const CustomSidebarMenu = (props) => {
-  const BASE_PATH =
-    'https://raw.githubusercontent.com/AboutReact/sampleresource/master/';
-  const proileImage = 'react_logo.png';
+function CustomSidebarMenu(props){
+  const { logOut } = useContext(AuthContext) 
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {/*Top Large Image */}
-      <Image
+      {/* <Image
         source={{ uri: BASE_PATH + proileImage }}
         style={styles.sideMenuProfileIcon}
-      />
+      /> */}
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
-          label="Visit Us"
-          onPress={() => Linking.openURL('https://aboutreact.com/')}
+          label="Sign Out"
+          onPress={() => logOut()}
         />
-        <View style={styles.customItem}>
-          <Text
-            onPress={() => {
-              Linking.openURL('https://aboutreact.com/');
-            }}>
-            Rate Us
-          </Text>
-          <Image
-            source={{ uri: BASE_PATH + 'star_filled.png' }}
-            style={styles.iconStyle}
-          />
-        </View>
       </DrawerContentScrollView>
-      <Text style={{ fontSize: 16, textAlign: 'center', color: 'grey' }}>
-        www.aboutreact.com
-      </Text>
     </SafeAreaView>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, Text, View, TextInput, Button, AsyncStorage } from 'react-native';
-import axios from 'axios';
+import {StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Auth(props){
 

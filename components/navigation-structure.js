@@ -3,7 +3,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { View, Image } from 'react-native'
 
 
-
 const NavigationDrawerStructure = (props) => {
     //Structure for the navigatin Drawer
     const toggleDrawer = () => {

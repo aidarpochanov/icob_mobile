@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import FetchingIndicator from 'react-native-fetching-indicator'
 import MatchItem from './match-item'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function MatchList(props) {

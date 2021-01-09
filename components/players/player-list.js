@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import FetchingIndicator from 'react-native-fetching-indicator'
 import PlayerItem from './player-item'
 
@@ -24,7 +25,7 @@ export default function PlayerList(props) {
         }) 
         .then(jsonRes => {
             setPlayers(jsonRes)
-            console.log(players)
+            // console.log(players)
             setLoading(false)
         })
         .catch(error => {

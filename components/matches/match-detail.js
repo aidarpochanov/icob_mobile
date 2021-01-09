@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, Button, AsyncStorage, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Button, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FetchingIndicator from 'react-native-fetching-indicator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function MatchDetail(props) {
