@@ -4,6 +4,7 @@ import Index from './components';
 import AuthStack from './components/auth/auth-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from './components/auth/context'
+import { Alert } from 'react-native'
 
 
 function Application() {
@@ -31,8 +32,7 @@ function Application() {
           };
         case 'REGISTER':
           return{
-            ...prevState,
-            userToken: null
+            ...prevState
           }
       }
     },
@@ -69,10 +69,6 @@ function Application() {
 
   const authContext = useMemo(() => ({
       logIn: async data => {
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `AsyncStorage`
-        // In the example, we'll use a dummy token
         let token = await fetch('https://icob-app.herokuapp.com/auth/', {
           method: 'POST',
           headers: {
@@ -94,23 +90,31 @@ function Application() {
         dispatch({ type: 'SIGN_OUT' })
       },
       register: async data => {
-        console.log(data)
         fetch('https://icob-app.herokuapp.com/mainapp/users/', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify({username: data.username, password: data.password})
+          body: JSON.stringify({username: data.username, password: data.password, first_name: data.name, last_name: data.surname})
         })
         .then(res => res.json()) 
         .then(jsonRes => {
+          Alert.alert(
+            `Register complete`,
+            `Registered player ${jsonRes.first_name} ${jsonRes.last_name} successfully`,
+            [
+              {
+                text: 'Log in',
+                onPress: () => data.props.navigation.navigate("Log in")
+              }
+            ]
+          )
         })
         .catch(error => console.log(error))
         dispatch({ type: 'REGISTER'});
       },
     }), [])
 
-  
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>

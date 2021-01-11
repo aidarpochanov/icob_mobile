@@ -53,13 +53,13 @@ export default function Register(props){
                 Surname
             </Text>
             <TextInput
-              placeholder="Name"
+              placeholder="Surname"
               onChangeText={text => setSurname(text)}
               value={surname}
               style={styles.input}
             //   autoCapitalize={'none'}
             />
-            <Button title="Register" onPress={() => register({username, password})}/>
+            <Button title="Register" onPress={() => register({username, password, name, surname, props})}/>
             <TouchableOpacity onPress={() => navigateToLogin()}>
                 <Text style={styles.register}>Already have an account? Go back to login.</Text> 
             </TouchableOpacity>
