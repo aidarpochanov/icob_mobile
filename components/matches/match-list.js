@@ -35,12 +35,8 @@ export default function MatchList(props) {
         })
     }
 
-    const saveToken = async (token) => {
-        await AsyncStorage.setItem('icob-token', "2d7f62b73ed767c255683169f4bba306ca7d6b0c")
-    }
 
     useEffect(() => {
-        saveToken();
         getMatches();
     }, [])
 
