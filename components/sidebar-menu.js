@@ -9,6 +9,7 @@ import {
   Image,
   Text,
   Linking,
+  Alert
 } from 'react-native';
 import AuthContext from './auth/context';
 import {
@@ -31,7 +32,15 @@ function CustomSidebarMenu(props){
         <DrawerItemList {...props} />
         <DrawerItem
           label="Sign Out"
-          onPress={() => logOut()}
+          onPress={() => Alert.alert(
+                                      "Sign out?",
+                                      "Are you sure you want to sign out?",
+                                      [{text: "Sign out",
+                                       onPress: () => logOut()
+                                      },
+                                      {text: 'Cancel', onPress: () => {}, style: 'cancel'}],
+                                      {cancelable: true}
+                                    )}
         />
       </DrawerContentScrollView>
     </SafeAreaView>

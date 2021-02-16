@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function MatchDetail(props) {
 
     const match = props.route.params.match
+    const isFutureMatch = props.route.params.isFutureMatch
     const [players, setPlayers] = useState([])
     const [loading, setLoading] = useState(false)
     let token = null
@@ -33,7 +34,7 @@ export default function MatchDetail(props) {
         })
     }
 
-    const playerClicked = async (player) => {
+    const voteMOTM = async (player) => {
         token = await AsyncStorage.getItem('icob-token');
         fetch(`https://icob-app.herokuapp.com/mainapp/matches/${match.id}/vote/`, {
             method: 'POST',
@@ -54,23 +55,32 @@ export default function MatchDetail(props) {
         })
     }
 
+    const playerClicked = player => {
+        props.navigation.navigate("Player List", { screen: 'Player Detail', params: {player: player}})
+    }
+
     useEffect(() => {
-        // console.log("Detail"+token)
         getPlayers(match)
     }, [])
 
     return (
         <View style={styles.container}>
-            <Text style={styles.centeredText}>Click on one of the players to vote MOTM:</Text>
             <FlatList  
                 data={players}
                 renderItem={({item}) => (
-                    <TouchableOpacity onPress={() => playerClicked(item)}>
-                        <View style={styles.item}>
-                            <Text style={styles.itemText}>{item.name + " " + item.surname}</Text>
-                            <View style={styles.lineStyle} />
+                    <View style={{flexDirection: "row", justifyContent:"space-between", marginBottom: 20}}>
+                        <TouchableOpacity onPress={() => playerClicked(item)}>
+                            <View>
+                                <Text style={styles.itemText}>{item.name + " " + item.surname}</Text>
+                                <View style={styles.lineStyle} />
+                            </View>
+                        </TouchableOpacity>
+                        <View>
+                            {!isFutureMatch &&
+                                <Button title="Vote MOTM" onPress={() => voteMOTM(item)}/>
+                            }
                         </View>
-                    </TouchableOpacity>
+                    </View>
                 )}
                 keyExtractor = {(item, index) => item.id.toString()}
             />
@@ -89,7 +99,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
         height: 50,
-        backgroundColor: '#282C35'
+        backgroundColor: '#282C35',
     },
     itemText: {
         color: '#fff',
@@ -103,5 +113,8 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 24,
         textAlign: 'center',
+    },
+    viewWithButton:{
+        display: 'flex'
     }
   });

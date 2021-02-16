@@ -3,13 +3,45 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, Button, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FetchingIndicator from 'react-native-fetching-indicator';
+import MatchItem from '../matches/match-item'
 
 
 export default function PlayerDetail(props) {
 
+    useEffect(() => {
+        console.log(props.route.params.player);
+    }, [])
+
     return (
         <View style={styles.container}>
-            <Text style={styles.itemText}>{props.route.params.player.name + " " + props.route.params.player.surname}</Text>
+            <Text style={styles.centeredText}>Matches played:</Text>
+            <FlatList  
+                data={props.route.params.player.matches}
+                renderItem={({item}) => 
+                    {
+                        if(Date.parse(item.date) <= Date.now()){
+                            return (
+                                <MatchItem match={item} isFutureMatch={false} navigation={props.navigation}/>
+                            )
+                        }
+                    }
+                }
+                keyExtractor = {(item, index) => item.id.toString()}
+            />
+            <Text style={styles.centeredText}>Future matches signed up for:</Text>
+            <FlatList  
+                data={props.route.params.player.matches}
+                renderItem={({item}) => 
+                    {
+                        if(Date.parse(item.date) > Date.now()){
+                            return (
+                                <MatchItem match={item} isFutureMatch={true} navigation={props.navigation}/>
+                            )
+                        }
+                    }
+                }
+                keyExtractor = {(item, index) => item.id.toString()}
+            />
         </View> 
     );
 }

@@ -47,7 +47,7 @@ export default function MatchList(props) {
             data={matches}
             renderItem={({item}) => 
                 {
-                    if(Date.parse(item.date) < Date.now()){
+                    if(Date.parse(item.date) <= Date.now()){
                         return (
                             <MatchItem match={item} isFutureMatch={false} navigation={props.navigation}/>
                         )
